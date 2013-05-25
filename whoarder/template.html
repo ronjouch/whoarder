@@ -40,7 +40,7 @@
 	        function group_by(parameter) {
 	            $('[class^="group_"]').css('float', 'right');//hide()
 	            $('[class="group_' + parameter + '"]').css('float', 'none');//.show();
-	            $('ul#clippings_list>li').tsort({attr: parameter});
+	            $('ul#clippings_list>li').tsort({attr: parameter},{attr: 'level'});
 	        }
 	        
 	        $(document).ready(function() {
@@ -79,13 +79,13 @@
                <a onclick="group_by('book')">book</a>.
 			<ul id="clippings_list">
             {% for b in books %}
-            <li a0="a0"{# topmost in alphabetical order #} class="group" book="{{ b[0] }}" author="{{ b[1] }}">
+            <li level="1" class="group" book="{{ b[0] }}" author="{{ b[1] }}">
                 <span class="group_book">{{ b[0] }}</span>
                 <span class="group_author">{{ b[1] }}</span>
             </li>
             {% endfor %}
 			{% for c in clippings %}
-			  <li author="{{ c.author }}" book="{{ c.book }}">
+			  <li level="2" author="{{ c.author }}" book="{{ c.book }}">
 			    <span class="contents">{{ c.contents }}</span><br />
 			    <span class="metadata">
 			      <span class="author_first_name">{{ c.author_first_name }}</span> <span class="author_last_name">{{ c.author_last_name }}</span>
