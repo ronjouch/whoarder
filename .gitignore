@@ -29,7 +29,12 @@ nosetests.xml
 # Translations
 *.mo
 
-# Mr Developer
-.mr.developer.cfg
+# Eclipse
+__pycache__
+.settings
 .project
 .pydevproject
+
+# Test data and outputs
+*.html
+test-full.txt
