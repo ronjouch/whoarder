@@ -38,8 +38,8 @@
         </script>
         <script type="text/javascript" language="javascript">
 	        function group_by(parameter) {
-	            $('[class^="group_"]').css('float', 'right');//hide()
-	            $('[class="group_' + parameter + '"]').css('float', 'none');//.show();
+	            $('[class^="group_"]').css('float', 'right');
+	            $('[class="group_' + parameter + '"]').css('float', 'none');
 	            $('ul#clippings_list>li').tsort({attr: parameter},{attr: 'level'});
 	        }
 	        
@@ -60,7 +60,7 @@
 	        	// reset search on Escape
 	        	$(document).keyup(function(e) {
 	        	    if (e.keyCode == 27) { // Esc
-	        	    	$('#search').val('') // or whatever you want
+	        	    	$('#search').val('')
 	                    $('li').show();
 	        	    }
 	        	});
