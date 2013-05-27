@@ -4,12 +4,12 @@ import os
 import re
 
 _CLIPPING_SEPARATOR = '==========\n'
-_PATTERN_LINE1 = re.compile(r'''
+_CLIPPING_LINE1 = re.compile(r'''
     ^(?P<book>.*)                               # Le Petit Prince
     \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
     ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
     ''', re.VERBOSE)
-_PATTERN_LINE2 = re.compile(r'''
+_CLIPPING_LINE2 = re.compile(r'''
     ^-\ Your\ (?P<type>.*)                      # Your Highlight
     \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
     \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
@@ -25,7 +25,7 @@ class Clippings:
         '''
         self.source = source
         self.dest = self._get_default_dest() if dest is None else dest
-        self.books = ()
+        self.book_author_couples = ()
         self.clippings = []
         self._import_clippings()
 
@@ -40,12 +40,15 @@ class Clippings:
         return default_destination
 
     def _import_clippings(self):
+        '''
+        Imports clippings and book_author_couples from the source file
+        '''
         clippings = ClippingsIterator(self.source)
         for c in clippings:
             self.clippings.append(c)
 
-        # a set of books will be useful later to display groups
-        self.books = set((clipping['book'], clipping['author'])
+        # will be useful later to display groups
+        self.book_author_couples = set((clipping['book'], clipping['author'])
                          for clipping in self.clippings)
 
     def export_clippings(self):
@@ -57,7 +60,8 @@ class Clippings:
                          autoescape=True,
                          extensions=['jinja2.ext.autoescape'])
         template = env.get_template('template.html')
-        render = template.render(clippings=self.clippings, books=self.books)
+        render = template.render(clippings=self.clippings,
+                                 book_author_couples=self.book_author_couples)
 
         with open(self.dest, mode='w', encoding='utf-8') as output:
             output.write(render)
@@ -113,8 +117,8 @@ class ClippingsIterator:
             else:
                 break
 
-        line_dict = _PATTERN_LINE1.search(clipping_buffer[0]).groupdict()
-        line_dict2 = _PATTERN_LINE2.search(clipping_buffer[1]).groupdict()
+        line_dict = _CLIPPING_LINE1.search(clipping_buffer[0]).groupdict()
+        line_dict2 = _CLIPPING_LINE2.search(clipping_buffer[1]).groupdict()
         line_dict.update(line_dict2)
         line_dict['contents'] = clipping_buffer[3]
         line_dict['author'] = line_dict['author_first_name'] \

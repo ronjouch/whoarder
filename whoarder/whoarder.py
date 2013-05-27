@@ -6,14 +6,14 @@ if __name__ == '__main__':
 
     # Boilerplate to allow running as script directly. Avoids error below:
     # SystemError: Parent module '' not loaded, cannot perform relative import
-    # See http://stackoverflow.com/questions/2943847/nightmare-with-relative-imports-how-does-pep-366-work/6655098#6655098
+    # See http://stackoverflow.com/questions/2943847/
     if __package__ is None:
         import sys
         import os
         abspath = os.path.abspath(__file__)
         parent_dir = os.path.dirname(os.path.dirname(abspath))
         sys.path.insert(0, parent_dir)
-        from clippings import Clippings
+        from whoarder.clippings import Clippings
         del sys, os
 
     parser = argparse.ArgumentParser(description="whoarder converts Kindle \

@@ -79,7 +79,7 @@
                <a onclick="group_by('book')">book</a>.
             </span>
 			<ul id="clippings_list">
-            {% for b in books %}
+            {% for b in book_author_couples %}
             <li level="1" class="group" book="{{ b[0] }}" author="{{ b[1] }}">
                 <span class="group_book">{{ b[0] }}</span>
                 <span class="group_author">{{ b[1] }}</span>
