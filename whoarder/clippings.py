@@ -1,41 +1,58 @@
+import chardet
+import codecs
+import os
+import re
+
+_CLIPPING_SEPARATOR = '==========\n'
+_PATTERN_LINE1 = re.compile(r'''
+    ^(?P<book>.*)                               # Le Petit Prince
+    \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
+    ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
+    ''', re.VERBOSE)
+_PATTERN_LINE2 = re.compile(r'''
+    ^-\ Your\ (?P<type>.*)                      # Your Highlight
+    \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
+    \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
+    \ \|\ Added\ on\ (?P<date>.*)$              #  | Added on...
+    ''', re.VERBOSE)
 
 
 class Clippings:
 
     def __init__(self, source, dest=None):
         '''
-        Launches the import and store it into the 'clippings' dict.
+        Prepares the import and store it into the 'clippings' dict.
         '''
         self.source = source
-        self.dest = self.get_default_dest() if dest is None else dest
+        self.dest = self._get_default_dest() if dest is None else dest
         self.books = ()
         self.clippings = []
-        self.import_clippings()
+        self._import_clippings()
 
-    def get_default_dest(self):
+    def _get_default_dest(self):
         '''
         When no destination is specified, output to InputFilename.html
         '''
-        import os
         source_full_path = os.path.realpath(self.source)
         dirname, filename_with_ext = os.path.split(source_full_path)
         filename = os.path.splitext(filename_with_ext)[0]
         default_destination = os.path.join(dirname, filename + '.html')
         return default_destination
 
-    def import_clippings(self):
+    def _import_clippings(self):
         clippings = ClippingsIterator(self.source)
         for c in clippings:
             self.clippings.append(c)
 
         # a set of books will be useful later to display groups
-        self.books = set((clipping['book'],clipping['author']) for clipping in self.clippings)
+        self.books = set((clipping['book'], clipping['author'])
+                         for clipping in self.clippings)
 
     def export_clippings(self):
         '''
         Output the clippings dict to HTML, using a Jinja2 template
         '''
-        from jinja2 import Environment, PackageLoader
+        from jinja2 import Environment, PackageLoader  # available from pip
         env = Environment(loader=PackageLoader('whoarder', '.'),
                          autoescape=True,
                          extensions=['jinja2.ext.autoescape'])
@@ -63,25 +80,10 @@ class ClippingsIterator:
     <contents>
     ==========
     '''
-    import re
-
-    clipping_separator = '==========\n'
-    pattern_line1 = re.compile(r'''
-        ^(?P<book>.*)                               # Le Petit Prince
-        \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
-        ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
-        ''', re.VERBOSE)
-    pattern_line2 = re.compile(r'''
-        ^-\ Your\ (?P<type>.*)                      # Your Highlight
-        \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
-        \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
-        \ \|\ Added\ on\ (?P<date>.*)$              #  | Added on...
-        ''', re.VERBOSE)
 
     def __init__(self, source):
-        detected_encoding = self.detect_encoding(source)
+        detected_encoding = _detect_encoding(source)
         self.source_file = open(source, mode='r', encoding=detected_encoding)
-        pass
 
     def __iter__(self):
         return self
@@ -91,7 +93,8 @@ class ClippingsIterator:
         count = 1
         while True:
             if count > 5:
-                raise InvalidFormatException("Input file doesn't seem to be a clippings file, separators are missing or damaged")
+                raise InvalidFormatException('''Input file doesn't seem to be
+                a clippings file, separators are missing or damaged''')
             if self.source_file.closed:
                 raise StopIteration
 
@@ -100,7 +103,7 @@ class ClippingsIterator:
             if not line:
                 self.source_file.close()
                 raise StopIteration
-            elif line != self.clipping_separator:
+            elif line != _CLIPPING_SEPARATOR:
                 # Kindle writes a FEFF BOM at the start of each clipping (i.e.
                 # every 6 lines), which is clearly wrong. We strip it.
                 if line[0] == "\ufeff":
@@ -110,30 +113,30 @@ class ClippingsIterator:
             else:
                 break
 
-        line_dict = self.pattern_line1.search(clipping_buffer[0]).groupdict()
-        line_dict2 = self.pattern_line2.search(clipping_buffer[1]).groupdict()
+        line_dict = _PATTERN_LINE1.search(clipping_buffer[0]).groupdict()
+        line_dict2 = _PATTERN_LINE2.search(clipping_buffer[1]).groupdict()
         line_dict.update(line_dict2)
         line_dict['contents'] = clipping_buffer[3]
-        line_dict['author'] = line_dict['author_first_name'] + " " + line_dict['author_last_name']
+        line_dict['author'] = line_dict['author_first_name'] \
+                              + " " + line_dict['author_last_name']
 
         return line_dict
 
-    def detect_encoding(self, source):
-        '''
-        Returns the encoding of the source file, using chardet.
-        '''
-        import codecs
-        rawdata = open(source, "rb").read()
-        # chardet detects UTF-8 with BOM as 'UTF-8' (I don't know why), i.e.
-        # fails to notify us about the BOM, resulting in a string prepended
-        # with \ufeff, so we manually detect and set the utf-8-sig encoding
-        if rawdata.startswith(codecs.BOM_UTF8):
-            detected_encoding = 'utf-8-sig'
-        else:
-            import chardet
-            result = chardet.detect(rawdata)
-            detected_encoding = result['encoding']
-        return detected_encoding
+
+def _detect_encoding(source):
+    '''
+    Returns the encoding of the source file, using chardet.
+    '''
+    rawdata = open(source, "rb").read()
+    # chardet detects UTF-8 with BOM as 'UTF-8' (I don't know why), i.e.
+    # fails to notify us about the BOM, resulting in a string prepended
+    # with \ufeff, so we manually detect and set the utf-8-sig encoding
+    if rawdata.startswith(codecs.BOM_UTF8):
+        detected_encoding = 'utf-8-sig'
+    else:
+        result = chardet.detect(rawdata)
+        detected_encoding = result['encoding']
+    return detected_encoding
 
 
 class InvalidFormatException(Exception):
