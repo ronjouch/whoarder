@@ -10,6 +10,7 @@ Requirements
 - Python 3.3 (so far I only tested with 3.3 on Linux, tests and patches to increase compatibility very welcome)
 - The `jinja2` and `chardet2` modules (install them from pip)
 - Only tested on a `My Clippings.txt` file produced by a Kindle Paperwhite (ok/ko reports for other devices and test data welcome)
+    - Kindle Fire & Kindle Fire HD are not supported, since they do note create the `My Clippings.txt` file. If you know where to dig that data for those versions, patches welcome.
 
 Usage
 --------------------
