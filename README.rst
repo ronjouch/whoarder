@@ -12,7 +12,7 @@ To install, just ``pip install whoarder`` . Requirements are:
 
 * Python 3.3 (so far I only tested with 3.3 on Linux, tests and patches to increase compatibility very welcome)
 
-* The ``jinja2`` and ``chardet2`` modules (install them from pip)
+* The ``jinja2`` and ``chardet2`` modules (automatically handled as ``setup.py`` dependencies)
 
 * Only tested on a ``My Clippings.txt`` file produced by a Kindle Paperwhite (ok/ko reports for other devices and test data welcome through `GitHub <https://github.com/ronjouch/whoarder/pulls>`_).
 
