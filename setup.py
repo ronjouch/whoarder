@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 setup(name='whoarder',
-    version='0.1',
+    version='0.2.1',
     description="whoarder converts your Kindle's 'My Clippings.txt' file to a more pleasant, sortable, filterable HTML file",
     long_description=readme(),
     classifiers=[
@@ -27,6 +27,8 @@ setup(name='whoarder',
     url='https://github.com/ronjouch/whoarder',
     license='LICENSE.txt',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    package_data={'whoarder': ['templates/*.html']},
+    test_suite='test',
     scripts=['bin/whoarder'],
     include_package_data=True,
     zip_safe=True,

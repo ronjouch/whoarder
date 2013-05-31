@@ -1,3 +1,1 @@
 include LICENSE.txt
-include whoarder/tests/test.txt
-recursive-include whoarder/templates *.html
