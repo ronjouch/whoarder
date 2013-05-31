@@ -13,7 +13,7 @@ Requirements
 
 * Only tested on a ``My Clippings.txt`` file produced by a Kindle Paperwhite (ok/ko reports for other devices and test data welcome through `GitHub <https://github.com/ronjouch/whoarder/pulls>`_).
 
-    - Kindle Fire & Kindle Fire HD are not supported, since they do note create the ``My Clippings.txt`` file. If you know where to dig that data for those versions, patches welcome.
+  - Kindle Fire & Kindle Fire HD are not supported, since they do note create the ``My Clippings.txt`` file. If you know where to dig that data for those versions, patches welcome.
 
 Usage
 -----
@@ -37,13 +37,13 @@ Similar Software
 
 * Web services
 
-    - `Clippings Converter <http://www.clippingsconverter.com/>`_
+  - `Clippings Converter <http://www.clippingsconverter.com/>`_
 
-    - `Clipper <http://www.claybavor.com/clipper/>`_
+  - `Clipper <http://www.claybavor.com/clipper/>`_
 
 * Offline
 
-    - (PHP) `kindle-split-by-book <https://gist.github.com/elvisciotti/1783585>`_
+  - (PHP) `kindle-split-by-book <https://gist.github.com/elvisciotti/1783585>`_
 
 License and contact
 -------------------
