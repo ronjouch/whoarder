@@ -5,8 +5,10 @@ whoarder
 
 .. image:: https://github.com/ronjouch/whoarder/raw/master/whoarder-screenshot.png
 
-Requirements
-------------
+Installation & Requirements
+---------------------------
+
+To install, just ``pip install whoarder`` . Requirements are:
 
 * Python 3.3 (so far I only tested with 3.3 on Linux, tests and patches to increase compatibility very welcome)
 
