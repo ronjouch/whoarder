@@ -1,20 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
+from whoarder.clippings import Clippings
 
 if __name__ == '__main__':
-
-    # Boilerplate to allow running as script directly. Avoids error below:
-    # SystemError: Parent module '' not loaded, cannot perform relative import
-    # See http://stackoverflow.com/questions/2943847/
-    if __package__ is None:
-        import sys
-        import os
-        abspath = os.path.abspath(__file__)
-        parent_dir = os.path.dirname(os.path.dirname(abspath))
-        sys.path.insert(0, parent_dir)
-        from whoarder.clippings import Clippings
-        del sys, os
 
     parser = argparse.ArgumentParser(description="whoarder converts Kindle \
                         'My Clippings.txt' files to more pleasant HTML.")
@@ -28,5 +17,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     clippings = Clippings(args.source, args.destination)
-    clippings.export_clippings()
+    clippings.export_to_html()
     print('Successfully wrote ' + clippings.dest + "\n")

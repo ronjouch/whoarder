@@ -35,6 +35,6 @@ __pycache__
 .project
 .pydevproject
 
-# Test data and outputs
-*.html
+# Personal test data and test data outputs
 test-full.txt
+test*.html

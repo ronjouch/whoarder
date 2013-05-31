@@ -2,16 +2,6 @@ from whoarder.clippings import Clippings
 import unittest
 
 
-class TestWrongImport(unittest.TestCase):
-
-    def test_wrong_path(self):
-        '''
-        converting a non-existent file should return a FileNotFoundError
-        '''
-        with self.assertRaises(FileNotFoundError):
-            self.clippings = Clippings('bar.txt')
-
-
 class TestImport(unittest.TestCase):
 
     def setUp(self):
@@ -100,12 +90,15 @@ class TestImport(unittest.TestCase):
         for clipping in self.clippings:
             self.assertIsNotNone(clipping['contents'])
 
-#     def test_presence_page(self):
-#         '''
-#                 # each clipping should reference the page it appeared on
-#         '''
-#         for clipping in self.clippings:
-#             self.assertIsNotNone(clipping['page'])
+
+class TestWrongImport(unittest.TestCase):
+
+    def test_wrong_path(self):
+        '''
+        converting a non-existent file should return a FileNotFoundError
+        '''
+        with self.assertRaises(FileNotFoundError):
+            self.clippings = Clippings('bar.txt')
 
 if __name__ == '__main__':
     unittest.main()

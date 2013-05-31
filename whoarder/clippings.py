@@ -3,19 +3,6 @@ import codecs
 import os
 import re
 
-_CLIPPING_SEPARATOR = '==========\n'
-_CLIPPING_LINE1 = re.compile(r'''
-    ^(?P<book>.*)                               # Le Petit Prince
-    \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
-    ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
-    ''', re.VERBOSE)
-_CLIPPING_LINE2 = re.compile(r'''
-    ^-\ Your\ (?P<type>.*)                      # Your Highlight
-    \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
-    \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
-    \ \|\ Added\ on\ (?P<date>.*)$              #  | Added on...
-    ''', re.VERBOSE)
-
 
 class Clippings:
 
@@ -27,11 +14,11 @@ class Clippings:
         self.dest = self._get_default_dest() if dest is None else dest
         self.book_author_couples = ()
         self.clippings = []
-        self._import_clippings()
+        self._fetch()
 
     def _get_default_dest(self):
         '''
-        When no destination is specified, output to InputFilename.html
+        When no destination is specified, output to <InputFilename>.html
         '''
         source_full_path = os.path.realpath(self.source)
         dirname, filename_with_ext = os.path.split(source_full_path)
@@ -39,7 +26,7 @@ class Clippings:
         default_destination = os.path.join(dirname, filename + '.html')
         return default_destination
 
-    def _import_clippings(self):
+    def _fetch(self):
         '''
         Imports clippings and book_author_couples from the source file
         '''
@@ -47,19 +34,19 @@ class Clippings:
         for c in clippings:
             self.clippings.append(c)
 
-        # will be useful later to display groups
+        # will be useful in the HTML to group by book/author
         self.book_author_couples = set((clipping['book'], clipping['author'])
                          for clipping in self.clippings)
 
-    def export_clippings(self):
+    def export_to_html(self):
         '''
         Output the clippings dict to HTML, using a Jinja2 template
         '''
         from jinja2 import Environment, PackageLoader  # available from pip
-        env = Environment(loader=PackageLoader('whoarder', '.'),
+        env = Environment(loader=PackageLoader('whoarder', 'templates'),
                          autoescape=True,
                          extensions=['jinja2.ext.autoescape'])
-        template = env.get_template('template.html')
+        template = env.get_template('template1.html')
         render = template.render(clippings=self.clippings,
                                  book_author_couples=self.book_author_couples)
 
@@ -85,6 +72,19 @@ class ClippingsIterator:
     ==========
     '''
 
+    _clipping_separator = '==========\n'
+    _clipping_line1 = re.compile(r'''
+        ^(?P<book>.*)                               # Le Petit Prince
+        \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
+        ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
+        ''', re.VERBOSE)
+    _clipping_line2 = re.compile(r'''
+        ^-\ Your\ (?P<type>.*)                      # Your Highlight
+        \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
+        \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
+        \ \|\ Added\ on\ (?P<date>.*)$              #  | Added on...
+        ''', re.VERBOSE)
+
     def __init__(self, source):
         detected_encoding = _detect_encoding(source)
         self.source_file = open(source, mode='r', encoding=detected_encoding)
@@ -107,9 +107,9 @@ class ClippingsIterator:
             if not line:
                 self.source_file.close()
                 raise StopIteration
-            elif line != _CLIPPING_SEPARATOR:
-                # Kindle writes a FEFF BOM at the start of each clipping (i.e.
-                # every 6 lines), which is clearly wrong. We strip it.
+            elif line != self._clipping_separator:
+                # Kindle writes a FEFF BOM at the start of each clipping
+                # (i.e. every 6 lines), which is clearly wrong. We strip it.
                 if line[0] == "\ufeff":
                     line = line.replace("\ufeff", "")
                 clipping_buffer.append(line.strip())
@@ -117,9 +117,9 @@ class ClippingsIterator:
             else:
                 break
 
-        line_dict = _CLIPPING_LINE1.search(clipping_buffer[0]).groupdict()
-        line_dict2 = _CLIPPING_LINE2.search(clipping_buffer[1]).groupdict()
-        line_dict.update(line_dict2)
+        line_dict = self._clipping_line1.search(clipping_buffer[0]).groupdict()
+        line_dic2 = self._clipping_line2.search(clipping_buffer[1]).groupdict()
+        line_dict.update(line_dic2)
         line_dict['contents'] = clipping_buffer[3]
         line_dict['author'] = line_dict['author_first_name'] \
                               + " " + line_dict['author_last_name']
