@@ -2,7 +2,7 @@ whoarder
 ========
 
 **whoarder** converts your Kindle's ``My Clippings.txt`` file to a more pleasant, sortable, filterable HTML file:
-.. image:: https://github.com/ronjouch/whoarder/blob/master/whoarder-screenshot.png
+.. image:: https://raw.github.com/ronjouch/whoarder/master/whoarder-screenshot.png
 
 Requirements
 ------------
