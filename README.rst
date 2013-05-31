@@ -23,7 +23,7 @@ Usage
 
 **Command-line**:
 
-Run ``whoarder.py /path/to/My Clippings.txt [destination]`` . If ``destination`` is omitted, the output HTML will be written in the same place (overwriting any pre-existing HTML).
+Run ``whoarder /path/to/My Clippings.txt [destination]`` . If ``destination`` is omitted, the output HTML will be written in the same place (overwriting any pre-existing HTML).
 
 **As module**::
 
