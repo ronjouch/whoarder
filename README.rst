@@ -29,7 +29,7 @@ Run ``whoarder /path/to/My Clippings.txt [destination]`` . If ``destination`` is
 
     from clippings import Clippings
     clippings = Clippings(args.source, args.destination)  # contains a 'clippings' dict containing the information
-    clippings.export_clippings()  # exports as HTML
+    clippings.export_to_html()  # exports as HTML
 
 **Tests**:
 
