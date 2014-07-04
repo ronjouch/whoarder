@@ -1,5 +1,5 @@
-﻿<book> (<author_last_name>, <author_first_name>)
-- Your <type> on Page 42 | Location 123-321 | Added on <date>
+﻿_BOOK_ (_AUTHOR_LAST_NAME_, _AUTHOR_FIRST_NAME_)
+- Your _TYPE_ on Page 42 | Location 123-321 | Added on _DATE_
 
 contents
 ==========
@@ -63,6 +63,16 @@ Uncle bob telling us about indentation style and bug density.
 
 Slouka on progress and numbers.
 ==========
+Boneshaker (Priest, Cherie)
+- Your Bookmark Location 441 | Added on Monday, December 30, 2013 6:59:23 PM
+
+
+==========
+ Your Kindle is updated! (Amazon)
+- Your Bookmark on Location 10 | Added on Tuesday, March 11, 2014 7:20:18 PM
+
+
+==========
 ﻿Essays from the Nick of Time: Reflections and Refutations (Slouka, Mark)
 - Your Highlight on Page 20 | Location 296-296 | Added on Sunday, May 19, 2013 2:01:07 AM
 
@@ -72,4 +82,9 @@ Slouka talking about understanding and shaping and understanding and shaping and
 - Your Highlight on Page 40 | Location 557-558 | Added on Monday, May 20, 2013 12:02:43 AM
 
 Slouka quoting Thoreau about margins to life and space and silence and the forming of self and space and silence and the forming of self and space and silence and the forming of self.
+==========
+Bogus Highlight
+nonsense
+
+This Highlight should fail to import and log an error message
 ==========

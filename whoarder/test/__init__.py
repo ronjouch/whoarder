@@ -9,21 +9,18 @@ class TestImport(unittest.TestCase):
         self.clippings = clippingsimporter.clippings
 
     def test_first_clipping(self):
-        self.assertEqual(self.clippings[0]['book'], '<book>')
-        self.assertEqual(self.clippings[0]['author_first_name'],
-                         '<author_first_name>')
-        self.assertEqual(self.clippings[0]['author_last_name'],
-                         '<author_last_name>')
-        self.assertEqual(self.clippings[0]['type'], '<type>')
+        self.assertEqual(self.clippings[0]['book'], '_BOOK_')
+        self.assertEqual(self.clippings[0]['author'], '_AUTHOR_LAST_NAME_, _AUTHOR_FIRST_NAME_')
+        self.assertEqual(self.clippings[0]['type'], '_TYPE_')
         self.assertEqual(self.clippings[0]['page'], 'Page 42')
         self.assertEqual(self.clippings[0]['location'], '123-321')
-        self.assertEqual(self.clippings[0]['date'], '<date>')
+        self.assertEqual(self.clippings[0]['date'], '_DATE_')
 
     def test_count(self):
         '''
-        test.txt' should yield 14 clippings (either note or highlight)
+        test.txt should yield a certain number of clippings.
         '''
-        self.assertEqual(len(self.clippings), 15)
+        self.assertEqual(len(self.clippings), 17)
 
     def test_count_notes(self):
         '''
@@ -40,6 +37,13 @@ class TestImport(unittest.TestCase):
         highlights = [i for i in self.clippings if i['type'] == 'Highlight']
         self.assertEqual(len(highlights), 13)
 
+    def test_count_bookmarks(self):
+        '''
+        test.txt should yield 2 bookmarks
+        '''
+        bookmarks = [i for i in self.clippings if i['type'] == 'Bookmark']
+        self.assertEqual(len(bookmarks), 2)
+
     def test_bom_stripped(self):
         '''
         Ensure repeated BOMs incorrectly written by Kindle are stripped
@@ -55,19 +59,12 @@ class TestImport(unittest.TestCase):
         for clipping in self.clippings:
             self.assertIsNotNone(clipping['book'])
 
-    def test_presence_author_first_name(self):
+    def test_presence_author(self):
         '''
-        Each clipping should reference its author's first name.
-        '''
-        for clipping in self.clippings:
-            self.assertIsNotNone(clipping['author_first_name'])
-
-    def test_presence_author_last_name(self):
-        '''
-        Each clipping should reference its author's last name.
+        Each clipping should reference its author's name.
         '''
         for clipping in self.clippings:
-            self.assertIsNotNone(clipping['author_last_name'])
+            self.assertIsNotNone(clipping['author'])
 
     def test_presence_location(self):
         '''

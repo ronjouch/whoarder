@@ -4,7 +4,7 @@ import os
 import re
 
 
-class Clippings:
+class Clippings(object):
 
     def __init__(self, source, dest=None):
         '''
@@ -31,12 +31,12 @@ class Clippings:
         Imports clippings and book_author_couples from the source file
         '''
         clippings = ClippingsIterator(self.source)
-        for c in clippings:
-            self.clippings.append(c)
+        for clipping in clippings:
+            self.clippings.append(clipping)
 
         # will be useful in the HTML to group by book/author
         self.book_author_couples = set((clipping['book'], clipping['author'])
-                         for clipping in self.clippings)
+                                       for clipping in self.clippings)
 
     def export_to_html(self):
         '''
@@ -44,8 +44,8 @@ class Clippings:
         '''
         from jinja2 import Environment, PackageLoader  # available from pip
         env = Environment(loader=PackageLoader('whoarder', 'templates'),
-                         autoescape=True,
-                         extensions=['jinja2.ext.autoescape'])
+                          autoescape=True,
+                          extensions=['jinja2.ext.autoescape'])
         template = env.get_template('template1.html')
         render = template.render(clippings=self.clippings,
                                  book_author_couples=self.book_author_couples)
@@ -54,7 +54,7 @@ class Clippings:
             output.write(render)
 
 
-class ClippingsIterator:
+class ClippingsIterator(object):
     '''
     Iterator that abstracts the Kindle format and spits a dict per clipping.
     A 'clipping' can be either a Highlight or a Note, and is (as far as I
@@ -74,16 +74,15 @@ class ClippingsIterator:
 
     _clipping_separator = '==========\n'
     _clipping_line1 = re.compile(r'''
-        ^(?P<book>.*)                               # Le Petit Prince
-        \ \((?P<author_last_name>.*)                #  (De Saint-Exupery
-        ,\ (?P<author_first_name>.*)\)$             #  , Antoine)
-        ''', re.VERBOSE)
+        ^(?P<book>.*)                            # Le Petit Prince
+        \ \((?P<author>.*)\)$                    #  (De Saint-Exupery, Antoine)
+        ''', re.VERBOSE | re.IGNORECASE)
     _clipping_line2 = re.compile(r'''
-        ^-\ Your\ (?P<type>.*)                      # Your Highlight
-        \ on\ (?P<page>Unnumbered\ Page|Page\ .*)   #  on Page 42
-        \ \|\ Location\ (?P<location>.*)            #  | Location 123-321
-        \ \|\ Added\ on\ (?P<date>.*)$              #  | Added on...
-        ''', re.VERBOSE)
+        ^-\ Your\ (?P<type>\w*)                         # Your Highlight
+        \ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)  #  on Page 42
+        \ \|\ (?:on\ )?Location\ (?P<location>.*)       #  | Location 123-321
+        \ \|\ Added\ on\ (?P<date>.*)$                  #  | Added on...
+        ''', re.VERBOSE | re.IGNORECASE)
 
     def __init__(self, source):
         detected_encoding = _detect_encoding(source)
@@ -117,14 +116,20 @@ class ClippingsIterator:
             else:
                 break
 
-        line_dict = self._clipping_line1.search(clipping_buffer[0]).groupdict()
-        line_dic2 = self._clipping_line2.search(clipping_buffer[1]).groupdict()
-        line_dict.update(line_dic2)
-        line_dict['contents'] = clipping_buffer[3]
-        line_dict['author'] = line_dict['author_first_name'] \
-                              + " " + line_dict['author_last_name']
+        if 'Page' not in clipping_buffer[1] and 'page' not in clipping_buffer[1]:
+            clipping_buffer[1] = re.sub(r'(- Your .*?) (.*)',
+                                        r'\1 on Unnumbered Page | \2',
+                                        clipping_buffer[1])
 
-        return line_dict
+        try:
+            line_dict = self._clipping_line1.search(clipping_buffer[0]).groupdict()
+            line_dic2 = self._clipping_line2.search(clipping_buffer[1]).groupdict()
+            line_dict.update(line_dic2)
+            line_dict['contents'] = clipping_buffer[3]
+            return line_dict
+        except AttributeError:
+            print("Failed to import the following note, please report to https://github.com/ronjouch/whoarder :\n  {0}\n".format(clipping_buffer))
+            return self.__next__()
 
 
 def _detect_encoding(source):

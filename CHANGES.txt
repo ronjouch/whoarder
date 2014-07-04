@@ -1,0 +1,15 @@
+0.3.0
+=====
+* Made parser less fragile regarding notes format:
+  * Stopped trying to parse author as "lastName, firstName", which isn't always respected
+  * Pre-process bookmarks, which do not have "On Page ..." in their second line
+  * Ignore case (e.g. on "on", "Page")
+  * When a line import fails, print a failure log instead of crashing
+
+0.2.0, 0.2.1, 0.2.2
+===================
+* Mostly packaging/pip fixes
+
+0.1
+===
+* Initial release
