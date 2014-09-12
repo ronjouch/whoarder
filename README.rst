@@ -8,7 +8,7 @@ whoarder
 Installation & Requirements
 ---------------------------
 
-To install, just ``pip install whoarder`` ([link to PyPI page](https://pypi.python.org/pypi/whoarder/)). Requirements are:
+To install, just ``pip install whoarder`` (`link to PyPI page <https://pypi.python.org/pypi/whoarder/>`_). Requirements are:
 
 * Python ≥3.3 (so far I only tested with 3.3 and 3.4 on Linux, tests and patches to increase compatibility very welcome)
 
