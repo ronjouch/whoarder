@@ -10,7 +10,7 @@ Installation & Requirements
 
 To install, just ``pip install whoarder`` . Requirements are:
 
-* Python 3.3 (so far I only tested with 3.3 on Linux, tests and patches to increase compatibility very welcome)
+* Python ≥3.3 (so far I only tested with 3.3 and 3.4 on Linux, tests and patches to increase compatibility very welcome)
 
 * The ``jinja2`` and ``chardet2`` modules (automatically handled as ``setup.py`` dependencies)
 
