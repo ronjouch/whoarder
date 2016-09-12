@@ -51,4 +51,4 @@ Similar Software
 License and contact
 -------------------
 
-Licensed under the BSD-new license, 2013 (see ``LICENSE.txt``), `ronan@jouchet.fr <mailto:ronan@jouchet.fr>`_ / `@ronjouch <https://twitter.com/ronjouch>`_
+Licensed under the MIT license, 2013-2016 (see ``LICENSE``), `ronan@jouchet.fr <mailto:ronan@jouchet.fr>`_ / `@ronjouch <https://twitter.com/ronjouch>`_
