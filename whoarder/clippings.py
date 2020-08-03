@@ -80,7 +80,7 @@ class ClippingsIterator(object):
     _clipping_line2 = re.compile(r'''
         ^-\ Your\ (?P<type>\w*)                         # Your Highlight
         \ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)  #  on Page 42
-        \ \|\ (?:on\ )?Location\ (?P<location>.*)       #  | Location 123-321
+        \ \|\ (?:on\ |at\ )?Location\ (?P<location>.*)  #  | Location 123-321
         \ \|\ Added\ on\ (?P<date>.*)$                  #  | Added on...
         ''', re.VERBOSE | re.IGNORECASE)
 
