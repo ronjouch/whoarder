@@ -78,11 +78,12 @@ class ClippingsIterator(object):
         (\ \((?P<author>.*)\))?$                 #  (De Saint-Exupery, Antoine)
         ''', re.VERBOSE | re.IGNORECASE)
     _clipping_line2 = re.compile(r'''
-        ^-\ Your\ (?P<type>\w*)                          # Your Highlight
-        (\ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)  #  on Page 42 |
+        ^-\ (?:Your\ )?(?P<type>\w*)                         # Your Highlight
+        (\ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)      #  on Page 42 |
         \ \|)?
-        \ (?:on\ |at\ )?Location\ (?P<location>.*)       #  Location 123-321
-        \ \|\ Added\ on\ (?P<date>.*)$                   #  | Added on...
+        (?:\ This\ Article)?                                 #  This Article
+        \ (?:on\ |at\ )?(Location|Loc\.)\ (?P<location>.*)   #  Location 123-321
+        \ \|\ Added\ on\ (?P<date>.*)$                       #  | Added on...
         ''', re.VERBOSE | re.IGNORECASE)
 
     def __init__(self, source):

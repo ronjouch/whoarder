@@ -23,6 +23,10 @@
             .group {font-size: 20px; font-weight: bold; color: #161; border-bottom: 1px solid #116611; padding-top: 15px;}
             .right {float: right; font-weight: normal; color: #333;}
             /*.hidden_author {display: none;}*/
+
+            li[type=Note] {
+                background: #FADC7A;
+            }
         </style>
         <script type="text/javascript" language="javascript">
         /*! jQuery v1.11.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
@@ -84,8 +88,12 @@
             </li>
             {% endfor %}
 			{% for c in clippings %}
-			  <li level="2" author="{{ c.author }}" book="{{ c.book }}">
-			    <span class="contents">{{ c.contents }}</span><br />
+              <li level="2" author="{{ c.author }}" book="{{ c.book }}" type="{{ c.type }}">
+                <span class="contents">
+                    {% autoescape false %}
+                        {{ c.contents | escape | replace("\n", "<br>") }}
+                    {% endautoescape %}
+                </span><br />
 			    <span class="metadata">
 			      <span class="author">{{ c.author }}</span>
 			      , <span class="book">{{ c.book }}</span>.
