@@ -22,7 +22,7 @@ class TestImport(unittest.TestCase):
         '''
         test.txt should yield a certain number of clippings.
         '''
-        self.assertEqual(len(self.clippings), 19)
+        self.assertEqual(len(self.clippings), 21)
 
     def test_count_notes(self):
         '''
@@ -30,14 +30,14 @@ class TestImport(unittest.TestCase):
         '''
         print(self.clippings)
         notes = [i for i in self.clippings if i['type'] == 'Note']
-        self.assertEqual(len(notes), 1)
+        self.assertEqual(len(notes), 2)
 
     def test_count_highlights(self):
         '''
         test.txt should yield 14 highlights
         '''
         highlights = [i for i in self.clippings if i['type'] == 'Highlight']
-        self.assertEqual(len(highlights), 15)
+        self.assertEqual(len(highlights), 16)
 
     def test_count_bookmarks(self):
         '''
@@ -64,9 +64,14 @@ class TestImport(unittest.TestCase):
     def test_presence_author(self):
         '''
         Each clipping should reference its author's name.
+
+        One exception: book `How to Win Friends and Influence People`
         '''
         for clipping in self.clippings:
-            self.assertIsNotNone(clipping['author'])
+            if clipping['book'] != 'How to Win Friends and Influence People':
+                self.assertIsNotNone(clipping['author'])
+            else:
+                self.assertIsNone(clipping['author'])
 
     def test_presence_location(self):
         '''
@@ -94,10 +99,19 @@ class TestImport(unittest.TestCase):
         Multiline clippings should be read correctly
         '''
 
-        contents = """John Doe remarked: \"Man, yeah.\n\nThis is tricky stuff\"\n"""
+        contents = """John Doe remarked: \"Man, yeah.\n\nThis is tricky stuff\""""
         clipping = self.clippings[17]
         print(clipping['contents'])
         self.assertEqual(contents, clipping['contents'])
+
+    def test_multiline_note(self):
+        '''
+        Multi-line note should be correctly extracted.
+        '''
+        notes = [i for i in self.clippings if i['type'] == 'Note']
+        notes = [i for i in notes if i['book'] == 'The Story of Britain: From the Romans to the Present: A Narrative History']
+        self.assertEqual(len(notes), 1)
+        self.assertEqual(notes[0]['contents'], "Idea: explore these concepts\nin further detail")
 
 
 class TestWrongImport(unittest.TestCase):
@@ -118,12 +132,11 @@ class TestMulitlineHighlights(unittest.TestCase):
     def test_failed_multiline_highlights(self):
         '''
         the multiline highlight for failed_test.txt should return an InvalidFormatException
-        
         '''
         with self.assertRaises(InvalidFormatException):
             Clippings(self.path)
         # self.assertIsNone(None)
-    
+
 
 if __name__ == '__main__':
     unittest.main()

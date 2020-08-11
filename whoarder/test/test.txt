@@ -100,3 +100,15 @@ nonsense
 
 This Highlight should fail to import and log an error message
 ==========
+How to Win Friends and Influence People
+- Your Highlight on page xvi | location 278-280 | Added on Sunday, 17 May 2020 19:35:38
+
+even in such technical lines as engineering, about 15 per cent of one’s financial success is due to one’s technical knowledge and about 85 per cent is due to skill in human engineering – to personality and the ability to lead people.
+==========
+The Story of Britain: From the Romans to the Present: A Narrative History (Fraser, Rebecca)
+- Your Note at location 1638 | Added on Wednesday, 10 June 2020 06:03:51
+
+Idea: explore these concepts
+in further detail
+
+==========
