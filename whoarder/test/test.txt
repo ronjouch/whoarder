@@ -112,3 +112,8 @@ Idea: explore these concepts
 in further detail
 
 ==========
+Refactoring: Improving the Design of Existing Code, Second Edition (John Smith's Library) (Martin Fowler)
+- Your Highlight at location 7400-7402 | Added on Thursday, 18 February 2021 05:28:18
+
+Like most tricky decisions, it’s not something I can reliably get right, so it’s important that I can reliably change things so the program can take advantage of my increasing understanding.
+==========

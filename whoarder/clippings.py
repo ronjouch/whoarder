@@ -75,7 +75,7 @@ class ClippingsIterator(object):
     _clipping_separator = '==========\n'
     _clipping_line1 = re.compile(r'''
         ^(?P<book>.*?)                           # Le Petit Prince
-        (\ \((?P<author>.*)\))?$                 #  (De Saint-Exupery, Antoine)
+        (\ \((?P<author>[^()]*)\))?$             #  (De Saint-Exupery, Antoine)
         ''', re.VERBOSE | re.IGNORECASE)
     _clipping_line2 = re.compile(r'''
         ^-\ (?:Your\ )?(?P<type>\w*)                         # Your Highlight
