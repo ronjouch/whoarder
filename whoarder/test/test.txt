@@ -90,6 +90,19 @@ John Doe remarked: "Man, yeah.
 
 This is tricky stuff"
 ==========
+﻿Multiline Failed Highlight (Author 1 Name, Author 1 First Name)
+- Your Highlight on Unnumbered Page | Location 218-219 | Added on Tuesday, April 9, 2013 7:37:21 PM
+
+John Doe remarked: "Man, yeah.
+
+This is tricky stuff"
+﻿Multiline Highlight (Author 1 Name, Author 1 First Name)
+- Your Highlight on Unnumbered Page | Location 218-219 | Added on Tuesday, April 9, 2013 7:37:21 PM
+
+John Doe remarked: "Man, yeah.
+
+This is tricky stuff"
+==========
 Bogus Highlight
 nonsense
 
