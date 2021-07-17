@@ -1,11 +1,13 @@
 from whoarder.clippings import Clippings
 import unittest
+import os
 
 
 class TestImport(unittest.TestCase):
 
     def setUp(self):
-        clippingsimporter = Clippings('test.txt')
+        path = (os.path.dirname(__file__)) + "/test.txt"
+        clippingsimporter = Clippings(path)
         self.clippings = clippingsimporter.clippings
 
     def test_first_clipping(self):
@@ -20,7 +22,7 @@ class TestImport(unittest.TestCase):
         '''
         test.txt should yield a certain number of clippings.
         '''
-        self.assertEqual(len(self.clippings), 17)
+        self.assertEqual(len(self.clippings), 18)
 
     def test_count_notes(self):
         '''
@@ -35,7 +37,7 @@ class TestImport(unittest.TestCase):
         test.txt should yield 13 highlights
         '''
         highlights = [i for i in self.clippings if i['type'] == 'Highlight']
-        self.assertEqual(len(highlights), 13)
+        self.assertEqual(len(highlights), 14)
 
     def test_count_bookmarks(self):
         '''
@@ -87,6 +89,14 @@ class TestImport(unittest.TestCase):
         for clipping in self.clippings:
             self.assertIsNotNone(clipping['contents'])
 
+    def test_multi_line_highlights(self):
+        '''
+        Multiline clippings should be read correctly
+        '''
+
+        contents = """John Doe remarked: \"Man, yeah.\n\nThis is tricky stuff\"\n"""
+        print(self.clippings[-1]['contents'])
+        self.assertEqual(contents, self.clippings[-1]['contents'])
 
 class TestWrongImport(unittest.TestCase):
 

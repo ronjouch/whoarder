@@ -83,6 +83,13 @@ Slouka talking about understanding and shaping and understanding and shaping and
 
 Slouka quoting Thoreau about margins to life and space and silence and the forming of self and space and silence and the forming of self and space and silence and the forming of self.
 ==========
+﻿Multiline Highlight (Author 1 Name, Author 1 First Name)
+- Your Highlight on Unnumbered Page | Location 218-219 | Added on Tuesday, April 9, 2013 7:37:21 PM
+
+John Doe remarked: "Man, yeah.
+
+This is tricky stuff"
+==========
 Bogus Highlight
 nonsense
 
