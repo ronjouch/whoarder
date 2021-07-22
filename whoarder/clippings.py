@@ -96,7 +96,6 @@ class ClippingsIterator(object):
         count = 1
         while True:
             if count > 5:
-                print(clipping_buffer[-1])
                 if self._clipping_line1.search( clipping_buffer[-1]) is not None or self._clipping_line2.search(clipping_buffer[-1]) is not None:
                     raise InvalidFormatException('''Input file doesn't seem to be
                     a clippings file, separators are missing or damaged''')
