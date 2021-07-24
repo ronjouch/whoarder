@@ -1,11 +1,13 @@
 from whoarder.clippings import Clippings
 import unittest
+import os
 
 
 class TestImport(unittest.TestCase):
 
     def setUp(self):
-        clippingsimporter = Clippings('test.txt')
+        path = (os.path.dirname(__file__)) + "/test.txt"
+        clippingsimporter = Clippings(path)
         self.clippings = clippingsimporter.clippings
 
     def test_first_clipping(self):

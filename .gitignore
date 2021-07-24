@@ -38,3 +38,9 @@ __pycache__
 # Personal test data and test data outputs
 test-full.txt
 test*.html
+
+# Conventional names for venvs
+.env
+.venv
+env
+venv
