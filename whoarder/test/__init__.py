@@ -1,4 +1,4 @@
-from whoarder.clippings import Clippings
+from whoarder.clippings import Clippings, InvalidFormatException
 import unittest
 import os
 
@@ -106,6 +106,22 @@ class TestWrongImport(unittest.TestCase):
         '''
         with self.assertRaises(FileNotFoundError):
             self.clippings = Clippings('bar.txt')
+
+
+class TestMulitlineHighlights(unittest.TestCase):
+
+    def setUp(self):
+        self.path = (os.path.dirname(__file__)) + "/failed_test.txt"
+
+    def test_failed_multiline_highlights(self):
+        '''
+        the multiline highlight for failed_test.txt should return an InvalidFormatException
+        
+        '''
+        with self.assertRaises(InvalidFormatException):
+            Clippings(self.path)
+        # self.assertIsNone(None)
+    
 
 if __name__ == '__main__':
     unittest.main()

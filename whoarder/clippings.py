@@ -150,5 +150,5 @@ def _detect_encoding(source):
     return detected_encoding
 
 
-class InvalidFormatException(Exception):
+class InvalidFormatException(BaseException):
     pass
