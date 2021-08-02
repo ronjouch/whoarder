@@ -1,4 +1,4 @@
-from whoarder.clippings import Clippings
+from whoarder.clippings import Clippings, InvalidFormatException
 import unittest
 import os
 
@@ -22,7 +22,7 @@ class TestImport(unittest.TestCase):
         '''
         test.txt should yield a certain number of clippings.
         '''
-        self.assertEqual(len(self.clippings), 17)
+        self.assertEqual(len(self.clippings), 18)
 
     def test_count_notes(self):
         '''
@@ -37,7 +37,7 @@ class TestImport(unittest.TestCase):
         test.txt should yield 13 highlights
         '''
         highlights = [i for i in self.clippings if i['type'] == 'Highlight']
-        self.assertEqual(len(highlights), 13)
+        self.assertEqual(len(highlights), 14)
 
     def test_count_bookmarks(self):
         '''
@@ -89,6 +89,14 @@ class TestImport(unittest.TestCase):
         for clipping in self.clippings:
             self.assertIsNotNone(clipping['contents'])
 
+    def test_multi_line_highlights(self):
+        '''
+        Multiline clippings should be read correctly
+        '''
+
+        contents = """John Doe remarked: \"Man, yeah.\n\nThis is tricky stuff\"\n"""
+        print(self.clippings[-1]['contents'])
+        self.assertEqual(contents, self.clippings[-1]['contents'])
 
 class TestWrongImport(unittest.TestCase):
 
@@ -98,6 +106,22 @@ class TestWrongImport(unittest.TestCase):
         '''
         with self.assertRaises(FileNotFoundError):
             self.clippings = Clippings('bar.txt')
+
+
+class TestMulitlineHighlights(unittest.TestCase):
+
+    def setUp(self):
+        self.path = (os.path.dirname(__file__)) + "/failed_test.txt"
+
+    def test_failed_multiline_highlights(self):
+        '''
+        the multiline highlight for failed_test.txt should return an InvalidFormatException
+        
+        '''
+        with self.assertRaises(InvalidFormatException):
+            Clippings(self.path)
+        # self.assertIsNone(None)
+    
 
 if __name__ == '__main__':
     unittest.main()

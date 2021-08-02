@@ -96,13 +96,13 @@ class ClippingsIterator(object):
         count = 1
         while True:
             if count > 5:
-                raise InvalidFormatException('''Input file doesn't seem to be
-                a clippings file, separators are missing or damaged''')
+                if self._clipping_line1.search( clipping_buffer[-1]) is not None or self._clipping_line2.search(clipping_buffer[-1]) is not None:
+                    raise InvalidFormatException('''Input file doesn't seem to be
+                    a clippings file, separators are missing or damaged''')
             if self.source_file.closed:
                 raise StopIteration
 
             line = self.source_file.readline()
-
             if not line:
                 self.source_file.close()
                 raise StopIteration
@@ -125,7 +125,9 @@ class ClippingsIterator(object):
             line_dict = self._clipping_line1.search(clipping_buffer[0]).groupdict()
             line_dic2 = self._clipping_line2.search(clipping_buffer[1]).groupdict()
             line_dict.update(line_dic2)
-            line_dict['contents'] = clipping_buffer[3]
+            line_dict['contents'] = ""
+            for clipping in clipping_buffer[3:]:
+                line_dict['contents'] += clipping + "\n"
             return line_dict
         except AttributeError:
             print("Failed to import the following note, please report to https://github.com/ronjouch/whoarder :\n  {0}\n".format(clipping_buffer))
@@ -148,5 +150,5 @@ def _detect_encoding(source):
     return detected_encoding
 
 
-class InvalidFormatException(Exception):
+class InvalidFormatException(BaseException):
     pass
