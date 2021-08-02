@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 setup(name='whoarder',
-    version='0.3.0',
+    version='0.3.1',
     description="whoarder converts your Kindle's 'My Clippings.txt' file to a more pleasant, sortable, filterable HTML file",
     long_description=readme(),
     classifiers=[
