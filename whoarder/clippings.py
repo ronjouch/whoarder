@@ -74,14 +74,16 @@ class ClippingsIterator(object):
 
     _clipping_separator = '==========\n'
     _clipping_line1 = re.compile(r'''
-        ^(?P<book>.*)                            # Le Petit Prince
-        \ \((?P<author>.*)\)$                    #  (De Saint-Exupery, Antoine)
+        ^(?P<book>.*?)                           # Le Petit Prince
+        (\ \((?P<author>[^()]*)\))?$             #  (De Saint-Exupery, Antoine)
         ''', re.VERBOSE | re.IGNORECASE)
     _clipping_line2 = re.compile(r'''
-        ^-\ Your\ (?P<type>\w*)                         # Your Highlight
-        \ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)  #  on Page 42
-        \ \|\ (?:on\ )?Location\ (?P<location>.*)       #  | Location 123-321
-        \ \|\ Added\ on\ (?P<date>.*)$                  #  | Added on...
+        ^-\ (?:Your\ )?(?P<type>\w*)                         # Your Highlight
+        (\ (?:on\ )?(?P<page>Unnumbered\ Page|Page\ .*)      #  on Page 42 |
+        \ \|)?
+        (?:\ This\ Article)?                                 #  This Article
+        \ (?:on\ |at\ )?(Location|Loc\.)\ (?P<location>.*)   #  Location 123-321
+        \ \|\ Added\ on\ (?P<date>.*)$                       #  | Added on...
         ''', re.VERBOSE | re.IGNORECASE)
 
     def __init__(self, source):
@@ -96,9 +98,26 @@ class ClippingsIterator(object):
         count = 1
         while True:
             if count > 5:
-                if self._clipping_line1.search( clipping_buffer[-1]) is not None or self._clipping_line2.search(clipping_buffer[-1]) is not None:
-                    raise InvalidFormatException('''Input file doesn't seem to be
-                    a clippings file, separators are missing or damaged''')
+                line_dict = self._clipping_line1.search(clipping_buffer[0])
+                line_dic2 = self._clipping_line2.search(clipping_buffer[1])
+                hl_type = None
+                if line_dic2:
+                    hl_type = line_dic2.groupdict()['type']
+
+                if not line_dict or not line_dic2 or hl_type not in ('Note', 'Highlight'):
+                    raise InvalidFormatException(
+                        '''Input file doesn't seem to be
+                        a clippings file, got invalid header lines'''
+                    )
+
+                # Check for corruption - if the current line is a valid first
+                # line, then the content somehow got merged together.
+                if self._clipping_line1.search(clipping_buffer[-2]) and self._clipping_line2.search(clipping_buffer[-1]):
+                    raise InvalidFormatException(
+                        '''Input file doesn't seem to be
+                        a clippings file, separators are missing or damaged'''
+                    )
+
             if self.source_file.closed:
                 raise StopIteration
 
@@ -125,9 +144,7 @@ class ClippingsIterator(object):
             line_dict = self._clipping_line1.search(clipping_buffer[0]).groupdict()
             line_dic2 = self._clipping_line2.search(clipping_buffer[1]).groupdict()
             line_dict.update(line_dic2)
-            line_dict['contents'] = ""
-            for clipping in clipping_buffer[3:]:
-                line_dict['contents'] += clipping + "\n"
+            line_dict['contents'] = '\n'.join(clipping_buffer[3:]).strip()
             return line_dict
         except AttributeError:
             print("Failed to import the following note, please report to https://github.com/ronjouch/whoarder :\n  {0}\n".format(clipping_buffer))
